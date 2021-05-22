@@ -34,7 +34,7 @@ export default class ClanRemoveListener extends Listener {
       );
       if (leader_role_id) await leader.roles.remove(leader_role_id);
 
-      if (embedList) embedList.edit(getEmbedList(clans));
+      if (embedList) embedList.edit(getEmbedList(clans, deletedClan.guild_id));
     } catch (err) {
       throw err;
     }

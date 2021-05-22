@@ -37,7 +37,7 @@ export default class ClanAddListener extends Listener {
       newClan.role_id = newRole.id;
       await newClan.save();
 
-      if (embedList) embedList.edit(getEmbedList(clans));
+      if (embedList) embedList.edit(getEmbedList(clans, newClan.guild_id));
     } catch (err) {
       console.log(err);
     }

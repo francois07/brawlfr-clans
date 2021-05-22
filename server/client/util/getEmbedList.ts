@@ -11,11 +11,13 @@ function displayDiscord(clan: IClan) {
     : `[[discord]](${clan.discord.url})`;
 }
 
-export default function getEmbedList(clans: IClan[]) {
-  const clansString = clans.map(
-    (clan) =>
-      `${displayName(clan)} ${displayDiscord(clan)} <@${clan.leader_id}>`
-  );
+export default function getEmbedList(clans: IClan[], guild_id: string) {
+  const clansString = clans
+    .filter((c) => c.guild_id == guild_id)
+    .map(
+      (clan) =>
+        `${displayName(clan)} ${displayDiscord(clan)} <@${clan.leader_id}>`
+    );
   const embed = new MessageEmbed()
     .setTitle("Liste des clans présents sur le Discord")
     .setDescription(clansString.join("\n"))

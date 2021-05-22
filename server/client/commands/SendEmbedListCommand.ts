@@ -7,6 +7,7 @@ import getEmbedList from "../util/getEmbedList";
 export default class SendEmbedListCommand extends Command {
   constructor() {
     super("sendembedlist", {
+      channel: "guild",
       aliases: ["sendembedlist", "sndl"],
       clientPermissions: ["SEND_MESSAGES"],
     });
@@ -15,7 +16,7 @@ export default class SendEmbedListCommand extends Command {
   public async exec(message: Message) {
     try {
       const clans = await this.client.ClanManager.model.find();
-      return getEmbedList(clans);
+      return getEmbedList(clans, message.guild!.id);
     } catch (err) {
       throw err;
     }
