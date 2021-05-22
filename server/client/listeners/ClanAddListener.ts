@@ -16,6 +16,9 @@ export default class ClanAddListener extends Listener {
       const clans = await this.client.ClanManager.model.find();
       const guild = await this.client.guilds.fetch(newClan.guild_id);
       const leader = await guild.members.fetch(newClan.leader_id);
+      const role = newClan.role_id
+        ? await guild.roles.fetch(newClan.role_id)
+        : null;
       const leader_role_id = this.client.settings.get(
         newClan.guild_id,
         "leader_role_id",
@@ -28,14 +31,20 @@ export default class ClanAddListener extends Listener {
       );
 
       if (leader_role_id) await leader.roles.add(leader_role_id);
-      const newRole = await guild.roles.create({
-        data: { name: newClan.alias || newClan.name },
-        reason: `Add ${newClan.name} to the clan list`,
-      });
-      await leader.roles.add(newRole);
 
-      newClan.role_id = newRole.id;
-      await newClan.save();
+      if (!role) {
+        const newRole = await guild.roles.create({
+          data: { name: newClan.alias || newClan.name },
+          reason: `Add ${newClan.name} to the clan list`,
+        });
+
+        await leader.roles.add(newRole);
+
+        newClan.role_id = newRole.id;
+        await newClan.save();
+      } else {
+        await leader.roles.add(role);
+      }
 
       if (embedList) embedList.edit(getEmbedList(clans, newClan.guild_id));
     } catch (err) {

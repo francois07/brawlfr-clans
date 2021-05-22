@@ -20,6 +20,13 @@ export default class AddClanCommand extends Command {
                 .setColor(0xffaa2b),
           },
         },
+        {
+          id: "role_id",
+          type: "string",
+          match: "option",
+          flag: "role_id:",
+          default: null,
+        },
       ],
     });
   }
@@ -45,7 +52,7 @@ export default class AddClanCommand extends Command {
         level: clanApplication.clan.level,
         discord: clanApplication.clan.discord,
         leader_id: clanApplication.clan.leader_id,
-        role_id: clanApplication.clan.role_id,
+        role_id: args.role_id || clanApplication.clan.role_id,
       });
       await this.client.ClanApplicationManager.remove(clanApplication.id);
     } catch (err) {
