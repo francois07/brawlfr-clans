@@ -7,6 +7,7 @@ export default class RemoveClanCommand extends Command {
     super("removeclan", {
       aliases: ["removeclan", "rc"],
       channel: "guild",
+      userPermissions: ["MANAGE_ROLES"],
       args: [
         {
           id: "clan_id",
