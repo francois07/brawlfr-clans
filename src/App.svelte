@@ -12,7 +12,6 @@
   let res = null;
 
   onMount(async () => {
-    console.log("fetching user...")
     const res = await fetch("/auth/me", {
       method: "GET",
       credentials: "include"
@@ -21,7 +20,6 @@
       const data = (await res.json());
       user = data.body
       formData.update(f => ({...f, leader_id: user.id}))
-      console.log(user)
     }
     else window.open("/auth", "_self");
   })
@@ -39,6 +37,11 @@
 }
 
 </script>
+
+<svelte:head>
+	<title>BrawlFR Clans</title>
+	<html lang="fr" />
+</svelte:head>
 
 <main>
   {#if user.id}
@@ -92,7 +95,6 @@
     {res}
   </div>
   {/if}
-  <pre>{JSON.stringify($formData, null, 2)}</pre>
   {:else}
     <div>Please login first</div>
   {/if}
