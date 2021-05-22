@@ -1,32 +1,24 @@
-import { Model, Document } from "mongoose";
-import { Collection, Client } from "discord.js";
+import type { Model, Document } from "mongoose";
+import { EventEmitter } from "events";
 
-export default class Manager<T, V extends Document> {
+export default class Manager<T, V extends Document> extends EventEmitter {
   public model: Model<V>;
-  public cache = new Collection<string, any>();
-  public client: Client;
+  public emitter: EventEmitter = new EventEmitter();
 
-  constructor(model: Model<V>, client: Client) {
+  constructor(model: Model<V>, validator?: any) {
+    super();
     this.model = model;
-    this.client = client;
   }
 
-  public async init() {
-    const items = await this.model.find();
-    for (const item of items) {
-      this.cache.set(item.id, item);
-    }
-  }
-
-  public get(id: string) {
-    return this.cache.get(id);
+  public async get(id: string) {
+    return this.model.findById(id);
   }
 
   public async add(item: T): Promise<V> {
     try {
       const newItem = new this.model(item);
       await newItem.save();
-      this.cache.set(newItem.id, item);
+      this.emit("addItem", newItem);
       return newItem;
     } catch (err) {
       throw err;
@@ -36,7 +28,7 @@ export default class Manager<T, V extends Document> {
   public async remove(id: string): Promise<V | null> {
     try {
       const deletedItem = await this.model.findByIdAndDelete(id);
-      this.cache.delete(id);
+      this.emit("deleteItem", deletedItem);
       return deletedItem;
     } catch (err) {
       throw err;
@@ -48,7 +40,7 @@ export default class Manager<T, V extends Document> {
       const updatedItem = await this.model.findByIdAndUpdate(id, item, {
         new: true,
       });
-      this.cache.set(id, updatedItem);
+      this.emit("updateItem", updatedItem);
       return updatedItem;
     } catch (err) {
       throw err;

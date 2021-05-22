@@ -1,7 +1,7 @@
-import { Command } from "discord-akairo";
+import type { Command } from "discord-akairo";
 import { Listener } from "discord-akairo";
 import { MessageEmbed } from "discord.js";
-import { Message } from "discord.js";
+import type { Message } from "discord.js";
 
 export default class CommandFinishedListener extends Listener {
   public constructor() {
@@ -19,17 +19,9 @@ export default class CommandFinishedListener extends Listener {
   ) {
     message.react("👌");
     if (returnValue && (await returnValue) instanceof MessageEmbed) {
-      message.channel
-        .send(
-          returnValue
-            .setFooter(
-              "Want me on your server? https://top.gg/bot/815728329188573204"
-            )
-            .setColor(0x9c7bd4)
-        )
-        .catch((e) => {
-          throw e;
-        });
+      message.channel.send(returnValue.setColor(0x9c7bd4)).catch((e) => {
+        throw e;
+      });
     }
   }
 }

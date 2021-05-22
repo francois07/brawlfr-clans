@@ -1,6 +1,6 @@
 import { Command } from "discord-akairo";
 import { MessageEmbed } from "discord.js";
-import { Message } from "discord.js";
+import type { Message } from "discord.js";
 
 export default class PingCommand extends Command {
   public constructor() {

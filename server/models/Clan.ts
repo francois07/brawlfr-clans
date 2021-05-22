@@ -4,10 +4,10 @@ export interface IClan {
   guild_id: string;
   name: string;
   alias: string;
-  discord_url: string;
+  discord: { url: string; private: boolean };
   leader_id: string;
   level: number;
-  role_id: string | null;
+  role_id?: string | null;
 }
 
 export interface IClanDoc extends IClan, Document {}
@@ -20,23 +20,27 @@ const ClanSchemaFields: Record<keyof IClan, any> = {
   name: {
     type: String,
     required: true,
+    unique: true,
+    maxLength: 24,
   },
   alias: {
     type: String,
-    default: null,
+    maxLength: 6,
   },
-  discord_url: {
-    type: String,
-    required: true,
+  discord: {
+    url: { type: String, required: true },
+    private: { type: Boolean, default: false },
   },
   leader_id: {
     type: String,
     required: true,
+    unique: true,
   },
   level: {
     type: Number,
     min: 0,
     max: 3,
+    default: 0,
   },
   role_id: {
     type: String,

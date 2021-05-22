@@ -7,11 +7,11 @@ import {
   AkairoHandlerOptions,
   MongooseProvider,
 } from "discord-akairo";
-import { ClientOptions } from "discord.js";
+import type { ClientOptions } from "discord.js";
 
 import Manager from "../managers/Manager";
-import ClanManager from "../managers/ClanManager";
 
+import Clan, { IClan, IClanDoc } from "../models/Clan";
 import ClanApplication, {
   IClanApplication,
   IClanApplicationDoc,
@@ -38,7 +38,7 @@ interface BotOptions {
 
 declare module "discord-akairo" {
   interface AkairoClient {
-    ClanManager: ClanManager;
+    ClanManager: Manager<IClan, IClanDoc>;
     ClanApplicationManager: Manager<IClanApplication, IClanApplicationDoc>;
     ClanMemberApplicationManager: Manager<
       IClanMemberApplication,
@@ -55,15 +55,15 @@ export class BotClient extends AkairoClient {
 
   public settings = new MongooseProvider(Settings);
 
-  public ClanManager = new ClanManager(this);
+  public ClanManager = new Manager<IClan, IClanDoc>(Clan);
   public ClanApplicationManager = new Manager<
     IClanApplication,
     IClanApplicationDoc
-  >(ClanApplication, this);
+  >(ClanApplication);
   public ClanMemberApplicationManager = new Manager<
     IClanMemberApplication,
     IClanMemberApplicationDoc
-  >(ClanMemberApplication, this);
+  >(ClanMemberApplication);
 
   public constructor(
     botOptions: BotOptions,
@@ -86,15 +86,15 @@ export class BotClient extends AkairoClient {
   }
 
   private async init(): Promise<void> {
-    await this.ClanManager.init();
-    await this.ClanApplicationManager.init();
-    await this.ClanMemberApplicationManager.init();
     await this.settings.init();
 
     this.commandHandler.useListenerHandler(this.listenerHandler);
     this.listenerHandler.setEmitters({
       commandHandler: this.commandHandler,
       listenerHandler: this.listenerHandler,
+      clanManager: this.ClanManager,
+      clanApplicationManager: this.ClanApplicationManager,
+      clanMemberApplicationManager: this.ClanMemberApplicationManager,
       process,
     });
 

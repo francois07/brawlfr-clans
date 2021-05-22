@@ -1,6 +1,6 @@
 import { Command } from "discord-akairo";
 import { MessageEmbed } from "discord.js";
-import { Message } from "discord.js";
+import type { Message } from "discord.js";
 
 export default class RemoveClanCommand extends Command {
   constructor() {
@@ -26,9 +26,15 @@ export default class RemoveClanCommand extends Command {
 
   public async exec(message: Message, args: any) {
     try {
-      const deletedClan = this.client.ClanManager.cache.find((c) =>
-        [c.id, c.name, c.alias].includes(args.clan_id)
-      );
+      const deletedClan = await this.client.ClanManager.model
+        .findOne({
+          $or: [
+            { id: args.clan_id },
+            { name: args.clan_id },
+            { alias: args.clan_id },
+          ],
+        })
+        .catch((e) => null);
       if (!deletedClan)
         return Promise.reject("Je n'ai trouvé aucun clan correspondant");
       await this.client.ClanManager.remove(deletedClan.id);

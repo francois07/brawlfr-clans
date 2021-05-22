@@ -1,6 +1,6 @@
 import { Listener } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
-import { Command } from "discord-akairo";
+import type { Command } from "discord-akairo";
 
 export default class CommandErrorListener extends Listener {
   public constructor() {
@@ -20,7 +20,7 @@ export default class CommandErrorListener extends Listener {
       await message.channel.send(
         new MessageEmbed()
           .setTitle("Error")
-          .setDescription(error.message)
+          .setDescription(error.message || error)
           .setColor(0xf54e42)
       );
       await message.react("❌");

@@ -1,12 +1,13 @@
 import { Command } from "discord-akairo";
 import { MessageEmbed } from "discord.js";
-import { Message } from "discord.js";
+import type { Message } from "discord.js";
 
 export default class SetLeaderRoleCommand extends Command {
   constructor() {
     super("setleaderrole", {
       aliases: ["setleaderrole", "sl"],
       channel: "guild",
+      userPermissions: ["MANAGE_ROLES"],
       args: [
         {
           id: "leader_role_id",
@@ -26,9 +27,9 @@ export default class SetLeaderRoleCommand extends Command {
     const { leader_role_id } = args;
     try {
       const leaderRole = await message.guild!.roles.fetch(leader_role_id);
-      const clans = this.client.ClanManager.cache
-        .filter((c) => c.guild_id === message.guild!.id)
-        .array();
+      const clans = (await this.client.ClanManager.model.find()).filter(
+        (c) => c.guild_id === message.guild!.id
+      );
       if (!leaderRole) {
         return Promise.reject("Aucun role ne correspond à cet id");
       }

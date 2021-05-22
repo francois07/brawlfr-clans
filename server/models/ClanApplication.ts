@@ -3,7 +3,7 @@ import { clanSchema, IClan } from "./Clan";
 
 export interface IClanApplication {
   author_id: string;
-  embed_id: string;
+  embed_id?: string;
   clan: IClan;
 }
 
@@ -16,9 +16,9 @@ const ClanApplicationSchemaFields: Record<keyof IClanApplication, any> = {
   },
   embed_id: {
     type: String,
-    required: true,
   },
   clan: {
+    _id: false,
     type: clanSchema,
     required: true,
   },
