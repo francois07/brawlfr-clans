@@ -22,7 +22,7 @@ export default class ClanRemoveListener extends Listener {
         "leader_role_id",
         undefined
       );
-      const embedList: Message = this.client.settings.get(
+      const {embed_id, channel_id} = this.client.settings.get(
         deletedClan.guild_id,
         "embed_list",
         undefined
@@ -34,6 +34,9 @@ export default class ClanRemoveListener extends Listener {
       );
       if (leader_role_id) await leader.roles.remove(leader_role_id);
 
+      const embedChannel: any = guild.channels.cache.filter(c => c.type === "text").get(channel_id);
+      const embedList: Message = await embedChannel?.messages.fetch(embed_id);
+      
       if (embedList) embedList.edit(getEmbedList(clans, deletedClan.guild_id));
     } catch (err) {
       throw err;

@@ -31,7 +31,10 @@ export default class SetEmbedListCommand extends Command {
         return Promise.reject("Aucun message ne correspond à cet id");
       }
 
-      this.client.settings.set(message.guild!.id, "embed_list", embedList);
+      this.client.settings.set(message.guild!.id, "embed_list", {
+        embed_id: embedList.id,
+        channel_id: embedList.channel.id
+      });
 
       return new MessageEmbed()
         .setTitle("Paramètres mis à jour")

@@ -1,5 +1,5 @@
 import { Listener } from "discord-akairo";
-import type { Message } from "discord.js";
+import type { Message, TextChannel } from "discord.js";
 import type { IClanDoc } from "../../models/Clan";
 import getEmbedList from "../util/getEmbedList";
 
@@ -24,7 +24,7 @@ export default class ClanAddListener extends Listener {
         "leader_role_id",
         undefined
       );
-      const embedList: Message = this.client.settings.get(
+      const {embed_id, channel_id} = this.client.settings.get(
         newClan.guild_id,
         "embed_list",
         undefined
@@ -45,6 +45,9 @@ export default class ClanAddListener extends Listener {
       } else {
         await leader.roles.add(role);
       }
+
+      const embedChannel: any = guild.channels.cache.filter(c => c.type === "text").get(channel_id);
+      const embedList: Message = await embedChannel?.messages.fetch(embed_id);
 
       if (embedList) embedList.edit(getEmbedList(clans, newClan.guild_id));
     } catch (err) {
