@@ -37,11 +37,24 @@ export default class JoinClanCommand extends Command {
         })
         .catch((e) => null);
       if (!clan) throw new Error("Je n'ai trouvé aucun clan correspondant");
+      const leader = await message.guild!.members.fetch(clan.leader_id);
 
       this.client.ClanMemberApplicationManager.add({
         author_id: message.author.id,
         clan_id: clan.id,
       });
+
+      await leader
+        .send(
+          new MessageEmbed().setDescription(
+            `<@${message.author.id}> à demandé à rejoindre votre clan sur ${
+              message.guild!.name
+            }!\n Utilisez la commande \`%acm <@${
+              message.author.id
+            }>\` pour lui assigner le rôle de clan`
+          )
+        )
+        .catch((e) => null);
 
       return new MessageEmbed()
         .setTitle("Demande envoyée")
