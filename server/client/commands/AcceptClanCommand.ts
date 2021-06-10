@@ -48,7 +48,9 @@ export default class AddClanCommand extends Command {
       await this.client.ClanManager.add({
         guild_id: clanApplication.clan.guild_id,
         name: clanApplication.clan.name,
-        alias: clanApplication.clan.alias,
+        alias: clanApplication.clan.alias?.length
+          ? clanApplication.clan.alias
+          : null,
         level: clanApplication.clan.level,
         discord: clanApplication.clan.discord,
         leader_id: clanApplication.clan.leader_id,

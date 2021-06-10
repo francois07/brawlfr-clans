@@ -3,7 +3,7 @@ import { Schema, model, Document } from "mongoose";
 export interface IClan {
   guild_id: string;
   name: string;
-  alias: string;
+  alias: string | null;
   discord: { url: string; private: boolean };
   leader_id: string;
   level: number;
