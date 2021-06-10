@@ -15,7 +15,8 @@ export default class ClanApplicationRemoveListener extends Listener {
     try {
       const guild = await this.client.guilds.fetch(clan.guild_id);
       const channel = await guild.channels.resolve(deletedApplication.embed_id);
-      if (channel) await channel.delete("Application denied");
+      if (channel)
+        await channel.delete("Application denied").catch((e) => null);
     } catch (err) {
       throw err;
     }

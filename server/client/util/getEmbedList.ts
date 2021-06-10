@@ -2,7 +2,7 @@ import { MessageEmbed } from "discord.js";
 import type { IClan } from "../../models/Clan";
 
 function displayName(clan: IClan) {
-  return clan.alias ? `${clan.alias} / ${clan.name}` : clan.name;
+  return clan.alias?.length ? `${clan.alias} / ${clan.name}` : clan.name;
 }
 
 function displayDiscord(clan: IClan) {

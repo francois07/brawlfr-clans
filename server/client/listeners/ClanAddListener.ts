@@ -24,7 +24,7 @@ export default class ClanAddListener extends Listener {
         "leader_role_id",
         undefined
       );
-      const {embed_id, channel_id} = this.client.settings.get(
+      const { embed_id, channel_id } = this.client.settings.get(
         newClan.guild_id,
         "embed_list",
         undefined
@@ -34,7 +34,7 @@ export default class ClanAddListener extends Listener {
 
       if (!role) {
         const newRole = await guild.roles.create({
-          data: { name: newClan.alias || newClan.name },
+          data: { name: newClan.alias?.length ? newClan.alias : newClan.name },
           reason: `Add ${newClan.name} to the clan list`,
         });
 
@@ -46,7 +46,9 @@ export default class ClanAddListener extends Listener {
         await leader.roles.add(role);
       }
 
-      const embedChannel: any = guild.channels.cache.filter(c => c.type === "text").get(channel_id);
+      const embedChannel: any = guild.channels.cache
+        .filter((c) => c.type === "text")
+        .get(channel_id);
       const embedList: Message = await embedChannel?.messages.fetch(embed_id);
 
       if (embedList) embedList.edit(getEmbedList(clans, newClan.guild_id));
