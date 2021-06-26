@@ -54,7 +54,7 @@ export const ClanSchemaValidator: Schema = {
       options: async (leader_id, { req, location, path }) => {
         const hasClan = await client.ClanManager.model.exists({ leader_id });
         const hasApplication = await client.ClanApplicationManager.model.exists(
-          { "clan.leader_id": leader_id }
+          { author_id: leader_id }
         );
         if (hasClan)
           return Promise.reject("Ton clan fait déjà partie de la liste");
